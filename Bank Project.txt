@@ -1,0 +1,154 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+class Person {
+protected:
+	int id;
+	string name, pass;
+public:
+	Person() {
+		id = 0;
+	}
+	Person(int id, string name, string pass) {
+		this->id = id;
+		this->name = name;
+		this->pass = pass;
+	}
+	void setName(string newName) {
+		if (newName.size() >= 5 && newName.size() <= 20) {
+			bool valid = true;
+			for (char c : newName) {
+				if (!isalpha(c)) {
+					valid = false;
+					break;
+				}
+			}
+			if (valid) {
+				name = newName;
+			}
+			else {
+				cout << "Name must contain only alphabetic characters.\n";
+			}
+		}
+		else {
+			cout << "Name must be between 5 and 20 characters.\n";
+		}
+	}
+	void setPass(string newPass) {
+		if (newPass.size() >= 8 && newPass.size() <= 20)
+			pass = newPass;
+		else {
+			cout << "Password must be between 8 and 20 characters.\n";
+		}
+	}
+	string getName() const {
+		return name;
+	}
+	string getPass() const {
+		return pass;
+	}
+	int getId() const {
+		return id;
+	}
+	void setId(int id) {
+		this->id = id;
+	}
+	virtual void display() const = 0;
+};
+class Client :public Person {
+protected:
+	double balance;
+public:
+	Client() {
+		balance = 1500;
+	}
+	double getBalance() const {
+		return balance;
+	}
+	
+	void setBal(double newBalance) {
+		if (newBalance >= 1500)
+			balance = newBalance;
+		else {
+			cout << "The balance cannot go below 1500.\n";
+		}
+	}
+		void deposit(double amount) {
+				balance += amount;
+		}
+		void withdraw(double amount) {
+			if (balance >= 1500)
+				balance -= amount;
+			else {
+				cout << "Insufficient balance. The balance cannot go below 1500.\n";
+			}
+		}
+			void transferTo(double amount, Client& recipient) {
+				if (balance - amount >= 1500) {
+					balance -= amount;
+					recipient.deposit(amount);
+				}
+				else {
+					cout << "Insufficient balance to transfer. The balance cannot go below 1500.\n";
+				}
+			}
+			void checkBalance() const {
+				cout << "Current balance: " << balance << endl;
+			}
+			void display() const {
+				cout << "Client ID: " << id << "\n"
+					<< "Name: " << name << "\n"
+					<< "Password: " << pass << "\n"
+					<< "Balance: " << balance << "\n";
+			}
+};
+
+class Employee :public Person {
+protected:
+	double salary;
+public:
+	Employee() {
+		salary = 5000;
+	}
+	
+	double getSalary() const {
+		return salary;
+	}
+	void setSalary(double newSalary) {
+		if (newSalary >= 5000) {
+			salary = newSalary;
+		}
+		else {
+			cout << "Salary must be at least 5000.\n";
+		}
+	}
+	void display() const {
+		cout << "Employee ID: " << id << endl
+			<< "Name: " << name << endl
+			<< "Password: " << pass << endl
+			<< "Salary: " << salary << endl;
+	}
+};
+
+class Admin : public Employee {
+public:
+	Admin() : Employee() {}
+	void display() const {
+		cout << "Admin ID: " << id << endl
+			<< "Name: " << name << endl
+			<< "Password: " << pass << endl
+			<< "Salary: " << salary << endl;
+	}
+};
+int main() {
+	Admin a1;Employee e1; Client c1;
+	a1.setName("Ahmedd"), a1.setId(1), a1.setPass("asdgeaswq"), a1.setSalary(5000);
+	a1.display();
+	cout << "========================" << endl;
+	e1.setName("Ahmedd"), e1.setId(1), e1.setPass("asdgeaswq"), e1.setSalary(5000);
+	e1.display();
+	cout << "========================" << endl;
+	c1.setName("Ahmedd"), c1.setId(1), c1.setPass("asdgeaswq"), c1.setBal(5000), c1.deposit(1000), c1.withdraw(1500); 
+	c1.display(), c1.checkBalance();
+}
